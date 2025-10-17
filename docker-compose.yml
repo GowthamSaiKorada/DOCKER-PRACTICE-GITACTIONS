@@ -1,50 +1,32 @@
 services:
   mysqldb:
-    container_name: mysql-db
     image: mysql:8
+    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: docker
       MYSQL_DATABASE: Apartmentdb
     ports:
       - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - springbootapartment-mysql-net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdocker"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      - mysql_data:/var/lib/mysql
 
   backend:
-    container_name: springbootapartment
     image: gowthamsaikorada/dockerapartment-backend:latest
+    container_name: springboot
     ports:
       - "2025:2000"
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
     restart: on-failure
-    networks:
-      - springbootapartment-mysql-net
 
   frontend:
-    container_name: reactapartment
     image: gowthamsaikorada/dockerapartment-frontend:latest
+    container_name: react
     ports:
       - "3000:80"
     depends_on:
       - backend
     restart: on-failure
-    networks:
-      - springbootapartment-mysql-net
 
-# Declare volume for MySQL persistence
 volumes:
-  mysql-data:
-
-# Define custom bridge network
-networks:
-  springbootapartment-mysql-net:
+  mysql_data:
