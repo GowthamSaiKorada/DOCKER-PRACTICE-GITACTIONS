@@ -22,7 +22,7 @@ services:
     container_name: springbootapartment
     image: gowthamsaikorada/dockerapartment-backend:latest
     ports:
-      - "2025:2051"
+      - "2025:2000"
     depends_on:
       mysqldb:
         condition: service_healthy
