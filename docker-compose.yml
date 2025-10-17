@@ -48,4 +48,3 @@ volumes:
 # Define custom bridge network
 networks:
   springbootapartment-mysql-net:
-    driver: bridge
