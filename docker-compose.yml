@@ -9,6 +9,14 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - apartment-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pdocker"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   backend:
     image: gowthamsaikorada/dockerapartment-backend:latest
@@ -16,8 +24,11 @@ services:
     ports:
       - "2025:2000"
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     restart: on-failure
+    networks:
+      - apartment-net
 
   frontend:
     image: gowthamsaikorada/dockerapartment-frontend:latest
@@ -27,6 +38,12 @@ services:
     depends_on:
       - backend
     restart: on-failure
+    networks:
+      - apartment-net
 
 volumes:
   mysql_data:
+
+networks:
+  apartment-net:
+    driver: bridge
