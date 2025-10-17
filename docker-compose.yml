@@ -18,8 +18,7 @@ services:
     ports:
       - "2025:2000"
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
     restart: on-failure
     networks:
       - apartment-net
