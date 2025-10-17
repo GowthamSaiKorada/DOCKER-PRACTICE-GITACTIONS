@@ -11,12 +11,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - apartment-net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pdocker"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
 
   backend:
     image: gowthamsaikorada/dockerapartment-backend:latest
@@ -46,4 +40,3 @@ volumes:
 
 networks:
   apartment-net:
-    driver: bridge
