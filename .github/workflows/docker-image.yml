@@ -30,7 +30,6 @@ jobs:
           file: ./ApartmenetsSpringboot/backend.Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockerapartment-backend:latest
-
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
