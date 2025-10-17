@@ -11,6 +11,10 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - apartment-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 5
 
   backend:
     image: gowthamsaikorada/dockerapartment-backend:latest
@@ -18,8 +22,8 @@ services:
     ports:
       - "2025:2000"
     depends_on:
-      - mysqldb
-    restart: on-failure
+      mysqldb:
+        condition: service_healthy
     networks:
       - apartment-net
 
