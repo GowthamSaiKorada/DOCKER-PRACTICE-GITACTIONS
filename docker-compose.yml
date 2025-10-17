@@ -1,0 +1,47 @@
+services:
+  mysqldb:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: Apartmentdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - springbootapartment-mysql-net
+
+  backend:
+    image: gowthamsaikorada/dockerapartment-backend:latest
+    container_name: springbootapartment
+    ports:
+      - "2025:2051"
+    depends_on:
+      - mysqldb
+    restart: on-failure
+    networks:
+      - springbootapartment-mysql-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdocker"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  frontend:
+    image: gowthamsaikorada/dockerapartment-frontend:latest
+    container_name: reactapartment
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - springbootapartment-mysql-net
+
+volumes:
+  mysql_data:
+
+networks:
+  springbootapartment-mysql-net:
